@@ -1,46 +1,38 @@
-import React from "react"
+import React, { Component } from 'react';
+import axios from 'axios';
 
-class CountNum extends React.Component{
-  componentDidMount(){
-    console.log('Componen di Mount')
-  }
-  componentWillUnmount(){
-    console.log('log Sebelum Ui ddi rander')
-  }
-  render(){
-    //const number =
-    return(
-      <>
-      {this.props.nameKey.judul}
+const api = axios.create({
+  baseURL: 'https://rickandmortyapi.com/api/character'
+})
 
-      <h1>{this.props.count}</h1>
-      </>
-    )
+class App extends Component{
+  state={
+    list:[]
   }
-}
 
-class App extends React.Component{
-  state = {
-    isShowed: true
-  }
-  count = {
-    isNumber: 0
+  constructor() {
+    super();
+    api.get('/').then(res => {
+      console.log(res.data.results);
+      this.setState({list: res.data.results})
+    })
   }
 
   render(){
-    
-    return(
-      <>
-
-      {this.state.isShowed&& <CountNum nameKey={{episode: 5, judul: 'asep'}} >Kedua</CountNum> }
-      <button onClick={() =>this.setState({isShowed: !this.state.isShowed})}>Click Me</button>
-      {/* <button onClick={() => this.setCount(count +1)}>Tambah</button> */}
-      <button onClick={() => this.setCount(this.count.isNumber -1)}>Kurang</button>
-
-      </>
-    
+    return (
+      <div className='d-flex flex-row flex-wrap gap-5 justify-content-center'>
+        {this.state.list.map(list => 
+        <div className='d-flex flex-column'>
+          <img className='rounded mx-auto d-block' src={list.image} alt=""></img>
+          <h2 className="text-center">{list.name}</h2>
+       </div>
+        )}
+      </div> 
     )
-
   }
+
+  
+
 }
-export default App
+export default App;
+
